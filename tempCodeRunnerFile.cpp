@@ -3,7 +3,6 @@
 #include <new>
 #include <memory>
 #include <thread>
-#include <mutex>
 
 std::mutex myMutex;
 
@@ -88,20 +87,12 @@ class Persoana : private Fiinta{
         int getVarsta(){
             return varsta;
         }
-      
         
 };
 
-void printFunc(){
-    myMutex.lock();
-    std::cout<<"Printing from a thread!\n";
-    myMutex.unlock();
-}
 
-void newprintFunc(){
-    std::lock_guard<std::mutex> g(myMutex);//cand obj termina ce are de facut il freezuie(mutex-ul)
-    std::cout << "Printing from thread\n";
-}
+
+
 
 int main(){
 
@@ -120,8 +111,6 @@ int main(){
     std::cout<< "Nume: "<<numeP<<std::endl; 
     std::cout<< "Prenume: "<<prenumeP<<std::endl;
     std::cout<< "Varsta: "<<varstaP<<std::endl;
-
-    //Item 13
     //creare obiect nou
     Persoana *p3 = new Persoana;
     //daca doar stergem normal se poate ca obiectuls afie refolosit intre timp
@@ -131,16 +120,5 @@ int main(){
     std:: unique_ptr<Persoana> p4(new Persoana); //va face release automat
 
 
-    //Item 14
-    std::thread t1(printFunc);
-    std::thread t2(printFunc);
-    t1.join();
-    t2.join();
 
-
-    //folosire RAII
-    std::thread t3(newprintFunc);
-    std::thread t3(newprintFunc);
-    t3.join();
-    t3.join();
 }
